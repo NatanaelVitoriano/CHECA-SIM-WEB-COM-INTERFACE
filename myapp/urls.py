@@ -1,7 +1,12 @@
-from django.urls import path 
+from django.conf import settings
+from django.conf.urls.static import static
+from django.urls import path
 from . import views
-from myapp import views
 
 urlpatterns = [
-    path('teste', views.mysite, name='mysite'), 
+    path('', views.mysite, name='mysite'), 
+    path('upload/', views.upload_arquivo, name='upload_arquivo'),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
