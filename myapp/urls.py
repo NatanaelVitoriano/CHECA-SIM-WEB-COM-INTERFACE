@@ -4,8 +4,7 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('', views.mysite, name='mysite'), 
-    path('upload/', views.upload_arquivo, name='upload_arquivo'),
+    path('', views.mysite, name='mysite'),
 ]
 
 if settings.DEBUG:

@@ -10,25 +10,10 @@ from .models import UploadArquivos
 from django.shortcuts import render
 from django.http import HttpResponse
 
-def upload_arquivo(request):
-    if request.method == 'POST':
-        formulario = MeuFormulario(request.POST, request.FILES)
-        files = request.FILES.getlist('arquivo')
-        if formulario.is_valid():
-            for f in files:
-                file_instance = UploadArquivos(arquivo=f)
-                file_instance.save()
-            # return render(request, 'index.html')
-    else:
-        
-        formulario = MeuFormulario()
-    
-    return render(request, 'upload_form.html', {'formulario': formulario})
-
 def mysite(request):
     
     if request.method == 'POST' and request.FILES.get('diretorio'):
-        diretorio = request.FILES.getlist('diretorio')
+        arquivos = request.FILES.getlist('diretorio')
         # Aqui você pode processar o diretório selecionado
 
         # Exemplo de processamento do diretório (simulado)
@@ -36,8 +21,9 @@ def mysite(request):
 
         # Construir uma string com os nomes dos arquivos
         response_content = "Arquivos no diretório selecionado:\n"
-        for arquivo in diretorio:
-            response_content += f"- {arquivo}\n"
+        for arquivo in arquivos:
+            print(arquivo.readline())
+            response_content += f"- {arquivo.readline()}\n"
 
         # Retornar a resposta HTTP com a lista de arquivos
         return HttpResponse(response_content)
