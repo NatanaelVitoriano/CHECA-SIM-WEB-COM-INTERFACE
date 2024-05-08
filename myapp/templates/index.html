@@ -3,7 +3,7 @@
 {% block content %}
 <h1>CHECA SIM-WEB</h1>
     <form action="" method="POST" enctype="multipart/form-data">
-        <input type="file" name="diretorio" id="upload_arquivo" webkitdirectory>
+        <input type="file" name="diretorio" webkitdirectory>
         {% csrf_token %}
         {{ formulario.as_p }}
         <button type="submit">Enviar</button>

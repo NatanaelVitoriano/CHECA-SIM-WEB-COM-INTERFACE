@@ -21,18 +21,19 @@ def mysite(request):
         
         response_content = "Arquivos no diretório selecionado:\n"
         for arquivo in arquivos:
-            # print(arquivo)
             if 'NE2' in str(arquivo):
+                dataNEDuplicada = []
                 for linhaDoNE in arquivo:
-                    print(arquivo.readline())
-                    dataNE.append(linhaDoNE)
+                    dataNEDuplicada.append(linhaDoNE)
+                dataNE = list(set(dataNEDuplicada))
+                print(str(dataNE[20][20]) + "\n\n" + str(dataNE[1]))
             if 'LI2' in str(arquivo):
                 for linhaDoLI in arquivo:
                     dataLI.append(linhaDoLI)
             if 'CO2' in str(arquivo):
                 for linhaDoCO in arquivo:
                     dataCO.append(linhaDoCO)
-                    
+            
         # Retornar a resposta HTTP com a lista de arquivos
         return HttpResponse(response_content)
     
