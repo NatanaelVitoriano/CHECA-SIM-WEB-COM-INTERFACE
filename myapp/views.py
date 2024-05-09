@@ -25,11 +25,8 @@ def mysite(request):
         response_content = "Verificação completa:\n"
         
         # Retornar a resposta HTTP com a lista de arquivos
-        logTexto = ''
-        for log in logContent:
-            
-            logTexto += log + "\n"
-        return HttpResponse(response_content + str(logTexto))
+        logFormatado = "\n".join(logContent)
+        return HttpResponse(logFormatado, content_type='text/plain')
     
     return render(request, 'index.html')
 
@@ -125,7 +122,6 @@ def validarArquivosSIM(arquivos):
                 pass
             
             break
-    return logContent
 
 def lerArquivosDoSIM(arquivos):
     global municipio
