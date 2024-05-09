@@ -24,15 +24,16 @@ def mysite(request):
             if 'NE2' in str(arquivo):
                 dataNEDuplicada = []
                 for linhaDoNE in arquivo:
-                    dataNEDuplicada.append(linhaDoNE)
-                dataNE = list(set(dataNEDuplicada))
-                print(str(dataNE[20][20]) + "\n\n" + str(dataNE[1]))
+                    # print(linhaDoNE)
+                    dataNE.append(linhaDoNE.decode("utf-8").replace("\r\n", "").split(","))
+                # dataNE = list(set(dataNEDuplicada))
             if 'LI2' in str(arquivo):
                 for linhaDoLI in arquivo:
-                    dataLI.append(linhaDoLI)
+                    dataLI.append(linhaDoLI.decode("utf-8").replace("\r\n", "").split(","))
+                print(len(dataLI))
             if 'CO2' in str(arquivo):
                 for linhaDoCO in arquivo:
-                    dataCO.append(linhaDoCO)
+                    dataCO.append(linhaDoCO.decode("utf-8").replace("\r\n", "").split(","))
             
         # Retornar a resposta HTTP com a lista de arquivos
         return HttpResponse(response_content)
