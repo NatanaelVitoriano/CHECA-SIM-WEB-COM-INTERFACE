@@ -1,11 +1,77 @@
 {% extends 'base.html' %}
 {% block title %}Pagina Inicial{% endblock %}
 {% block content %}
-<h1>CHECA SIM-WEB</h1>
-    <form action="" method="POST" enctype="multipart/form-data">
-        <input type="file" name="diretorio" webkitdirectory>
-        {% csrf_token %}
-        {{ formulario.as_p }}
-        <button type="submit">Enviar</button>
-    </form>
+<style>
+    .container {
+        width: 100vw;
+        height: 100vh;
+        background: #F5F5F5;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+    }
+    .box {
+        width: 350px;
+        height: 350px;
+        background: #ADD8E6;
+        border:solid 1px;
+        border-radius:20px;
+    }
+    h2,form{
+        align-items: center;
+        margin: 0;
+        padding: 0 10px;
+        display: flex;
+    }
+    p {
+        width: 300px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0 auto;
+        padding: 0 5px;
+        border:solid 1px;
+        box-shadow:10px 10px 10px 5px black;
+    }
+    body {
+        border: ;
+        background: #F5F5F5;
+        margin: 0px;
+        width: 100vw;
+        height: 100vh;
+    }
+</style>
+
+{% comment %} <div class="container">
+    <div>
+        <div class="col align-self-center">
+            <div class="centered" style="width: 524px">
+                <h2>CHECA SIM-WEB</h2>
+                <form action="{% url 'exibir_resultado' %}" method="POST" enctype="multipart/form-data">
+                    <input type="file" name="diretorio" webkitdirectory>
+                    {% csrf_token %}
+                    {{ formulario.as_p }}
+                    <button type="submit">Enviar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div> {% endcomment %}
+
+<div class="container">
+    <div class="box">
+    </br></br></br></br>
+        <h2>CHECA SIM-WEB</h2>
+        <form class="form-inline" action="{% url 'exibir_resultado' %}" method="POST" enctype="multipart/form-data">
+            <input type="file" name="diretorio" webkitdirectory>
+            {% csrf_token %}
+            {{ formulario.as_p }}
+            <button type="submit">Enviar</button>
+        </form>
+    </br>
+        <p>Selecione a pasta com os arquivos de licitações, contratos e notas de empenho</p>
+    </div>
+</div>
+
 {% endblock %}

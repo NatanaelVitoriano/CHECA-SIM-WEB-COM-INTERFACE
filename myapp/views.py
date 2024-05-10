@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
 from pathlib import Path
 import requests
@@ -19,16 +19,17 @@ listaDeLicitacoesNoSIMWEB = []
 logContent = []
 
 def mysite(request):
+    return render(request, 'index.html')
+
+def exibir_resultado(request):
     if request.method == 'POST' and request.FILES.get('diretorio'):
         arquivos = request.FILES.getlist('diretorio')
         validarArquivosSIM(arquivos)
-        response_content = "Verificação completa:\n"
-        
-        # Retornar a resposta HTTP com a lista de arquivos
-        logFormatado = "\n".join(logContent)
-        return HttpResponse(logFormatado, content_type='text/plain')
+        # logFormatado = "\n".join(logContent)
+        return render(request, 'resultado.html', {'lista': logContent})
     
-    return render(request, 'index.html')
+    else:
+        return redirect('mysite')
 
 def validarArquivosSIM(arquivos):
     lerArquivosDoSIM(arquivos)
@@ -107,7 +108,7 @@ def validarArquivosSIM(arquivos):
                     
                     if dadosCO[24].replace('"',"") == contratoCO[3].replace('"',"") and dadosCO[25].replace('"',"") == contratoCO[4].replace('"',""):
                         contratoNoArquivoCO = True
-                        break
+                        break 
                     
             if contratoNoSIM and contratoNoArquivoCO:
                 logContent.append("Contrato " + dadosCO[24].replace('"',"") + " na linha " + str(x) + " do arquivo NE está duplicado.")

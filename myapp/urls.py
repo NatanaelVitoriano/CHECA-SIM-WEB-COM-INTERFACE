@@ -5,6 +5,7 @@ from . import views
 
 urlpatterns = [
     path('', views.mysite, name='mysite'),
+    path('resultado/', views.exibir_resultado, name='exibir_resultado'),
 ]
 
 if settings.DEBUG:
