@@ -36,18 +36,19 @@ def validarArquivosSIM(arquivos):
     apiJson = buscarDadosNaAPI(municipio)
     listaDeContratosNaAPI = apiJson[0]
     listaDeLicitacoesNaAPI = apiJson[1]
-    
+    checarSeLicitacaoTemEmpenho()
     for licitacaoLI in dataLI:
         listaDeLicitacoesNoSIMWEB.append([licitacaoLI[3].replace('"',""),licitacaoLI[2]])
 
     for licitacao in listaDeLicitacoesNaAPI:
         listaDeLicitacoesNoSIMWEB.append([licitacao['numero_licitacao'].replace('"',""), licitacao["data_realizacao_autuacao_licitacao"].replace('"',"").replace("-","")])
     
-    licitacaoFaltando = True   
+    licitacaoFaltando = True
+    numLicitacaoFaltando = ''
     for x, data in enumerate(dataNE, start=1):
         if data[24].replace('"', '') == "":
             continue
-
+                
         licitacaoFaltando = True 
         for i in listaDeLicitacoesNoSIMWEB:
             if data[26].replace('"',"") == i[0] and data[27].replace('"',"") == i[1]:
@@ -55,7 +56,9 @@ def validarArquivosSIM(arquivos):
                 break
         
         if licitacaoFaltando:
-            print(f"Licitação faltando para a linha NE {x}: {data[26]}")
+            print(f"Licitação faltando no arquivo LI na linha NE {x}: {data[26]}")
+            
+        
             
     for licitacaoLI in dataLI:
         for licitacao in listaDeLicitacoesNaAPI:
@@ -124,6 +127,15 @@ def validarArquivosSIM(arquivos):
             
             break
 
+def checarSeLicitacaoTemEmpenho():
+    for dadosLI in dataLI:
+        licitacaoEmpenhada = False
+        for x, dadosNE in enumerate(dataNE, start=1):
+            if dadosLI[3] == dadosNE[26]:
+                licitacaoEmpenhada == True
+                print('aqui')
+                continue
+        
 def lerArquivosDoSIM(arquivos):
     global municipio
     for arquivo in arquivos:
