@@ -21,4 +21,4 @@ def main():
 if __name__ == '__main__':
     main()
 # source .venv/Scripts/activate
-# python manage.py runserver
+# python manage.py runserver 0.0.0.0:8000

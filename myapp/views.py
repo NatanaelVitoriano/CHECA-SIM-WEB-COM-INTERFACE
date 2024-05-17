@@ -30,13 +30,14 @@ def exibir_resultado(request):
     
     else:
         return redirect('mysite')
-
+    
 def validarArquivosSIM(arquivos):
+    varClear()
     lerArquivosDoSIM(arquivos)
     apiJson = buscarDadosNaAPI(municipio)
     listaDeContratosNaAPI = apiJson[0]
     listaDeLicitacoesNaAPI = apiJson[1]
-    checarSeLicitacaoTemEmpenho()
+    
     for licitacaoLI in dataLI:
         listaDeLicitacoesNoSIMWEB.append([licitacaoLI[3].replace('"',""),licitacaoLI[2]])
 
@@ -56,15 +57,13 @@ def validarArquivosSIM(arquivos):
                 break
         
         if licitacaoFaltando:
-            print(f"Licitação faltando no arquivo LI na linha NE {x}: {data[26]}")
-            
+            logContent.append(f"Licitação faltando no arquivo LI na linha NE {x}: {data[26]}")
         
-            
     for licitacaoLI in dataLI:
         for licitacao in listaDeLicitacoesNaAPI:
             if licitacaoLI[3].replace('"',"") == licitacao['numero_licitacao']:
                 logContent.append("Licitacao " + licitacaoLI[3] + " duplicada")
-
+                
     for x, ctCO in enumerate(dataCO, start= 1):
         if ctCO[20].replace('"',"") == "":
             continue
@@ -84,7 +83,7 @@ def validarArquivosSIM(arquivos):
                     break
                 
             if licitacaoNoSIM == False and licitacaoNoArquivoLI == False:
-                print("Licitacao " + ctCO[20] + " na linha " + str(x) +  " do arquivo CO sem empenho")
+                logContent.append("Licitacao " + ctCO[20] + " na linha " + str(x) +  " do arquivo CO sem empenho")
             
             else:
                 break
@@ -96,23 +95,36 @@ def validarArquivosSIM(arquivos):
         if dadosCO[24].replace('"', '') == "":
             continue
         
-        contratoNoSIM = False
-        contratoNoArquivoCO = False
-        dataDiferente = False
         while True:
+            contratoNoSIM = False
+            contratoNoArquivoCO = False
+            temEmpenho = True
             for i, contrato in enumerate(listaDeContratosNaAPI, start=0):
                 if dadosCO[24].replace('"',"") == contrato['numero_contrato'].replace('"',"") and dadosCO[25].replace('"',"") == contrato['data_contrato'].replace("-","")[0:8]:
                     contratoNoSIM = True
                     
+                    # print(contrato['numero_contrato'])
                 elif dadosCO[24].replace('"',"") == contrato['numero_contrato'].replace('"',"") and dadosCO[25].replace('"',"") != contrato['data_contrato'].replace("-","")[0:8]:
-                    print("Contrato " + dadosCO[24] + " com data diferente")
+                    logContent.append("Contrato " + dadosCO[24] + " com data diferente")
+                    
                     
             for i, contratoCO in enumerate(dataCO, start=0):
                     
                     if dadosCO[24].replace('"',"") == contratoCO[3].replace('"',"") and dadosCO[25].replace('"',"") == contratoCO[4].replace('"',""):
                         contratoNoArquivoCO = True
-                        break 
+                        temEmpenho = True
+                        break
+                        
                     
+                    elif dadosCO[24].replace('"',"") == contratoCO[3].replace('"',"") and dadosCO[25].replace('"',"") != contratoCO[4].replace('"',""):
+                        logContent.append("Contrato " + dadosCO[24] + " com data diferente")
+                        temEmpenho = True
+                        break
+                        
+                        
+                    elif dadosCO[24].replace('"',"") != contratoCO[3].replace('"',"") and dadosCO[25].replace('"',"") != contratoCO[4].replace('"',""):
+                        contratoNoArquivoCO = False
+                        
             if contratoNoSIM and contratoNoArquivoCO:
                 logContent.append("Contrato " + dadosCO[24].replace('"',"") + " na linha " + str(x) + " do arquivo NE está duplicado.")
                 
@@ -120,22 +132,49 @@ def validarArquivosSIM(arquivos):
                 pass
                     
             elif contratoNoSIM == False and contratoNoArquivoCO == False:
-                print("Contrato " + dadosCO[24].replace('"',"") + " na linha " + str(x) + " invalido no arquivo CO.")
-                
+                logContent.append("Contrato " + dadosCO[24].replace('"',"") + " na linha " + str(x) + " invalido no arquivo CO.")
+            
+            elif contratoNoSIM == False and contratoNoArquivoCO and temEmpenho == False:
+                logContent.append("sem empenho")
+            
             elif contratoNoSIM == False and contratoNoArquivoCO == True:
                 pass
             
+            else:
+                logContent.append("Contrato " + dadosCO[24].replace('"',"") + " invalido")
             break
-
-def checarSeLicitacaoTemEmpenho():
-    for dadosLI in dataLI:
-        licitacaoEmpenhada = False
-        for x, dadosNE in enumerate(dataNE, start=1):
-            if dadosLI[3] == dadosNE[26]:
-                licitacaoEmpenhada == True
-                print('aqui')
-                continue
+    checarSeTemEmpenho()
+    
+def varClear():
+    global dataNE
+    global dataLI
+    global dataCO
+    global listaDeContratosNaAPI
+    global listaDeLicitacoesNaAPI
+    global licitacoesEmpenhadas
+    global listaDeLicitacoesNoLI
+    global listaDeLicitacoesNoSIMWEB
+    global logContent
+    
+    dataNE.clear()
+    dataLI.clear()
+    dataCO.clear()
+    listaDeContratosNaAPI.clear()
+    listaDeLicitacoesNaAPI.clear()
+    licitacoesEmpenhadas.clear()
+    listaDeLicitacoesNoLI.clear()
+    listaDeLicitacoesNoSIMWEB.clear()
+    logContent.clear()
+    
+def checarSeTemEmpenho():
+    for contratoCO in dataCO:
+        if not(str(contratoCO[3]) in str(dataNE)):
+            logContent.append("Contrato " + contratoCO[3] + " sem empenho.")
         
+    for dadosLI in dataLI:
+        if not(str(dadosLI[3]) in str(dataNE)):
+            logContent.append("Licitacao " + dadosLI[3] + " sem empenho.")
+            
 def lerArquivosDoSIM(arquivos):
     global municipio
     for arquivo in arquivos:
