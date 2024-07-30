@@ -24,11 +24,18 @@
 </head>
 <body>
     <div class="grid-container">
-        {% for item in lista %}
+        {% if lista %}
+            {% for item in lista %}
+                <div class="grid-item">
+                    <p>{{ item }}</p>
+                </div>
+            {% endfor %}
+
+        {% else %}
             <div class="grid-item">
-                <p>{{ item }}</p>
+                <p>Verificação concluida sem erros!</p>
             </div>
-        {% endfor %}
+        {% endif %}
     </div>
 </body>
 </html>

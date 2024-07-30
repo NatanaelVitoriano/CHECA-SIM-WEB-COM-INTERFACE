@@ -57,7 +57,7 @@ def validarArquivosSIM(arquivos):
                 break
         
         if licitacaoFaltando:
-            logContent.append(f"Licitação faltando no arquivo LI na linha NE {x}: {data[26]}")
+            logContent.append(f"Licitação faltando no arquivo LI, na linha {x} do arquivo NE: {data[26]}")
         
     for licitacaoLI in dataLI:
         for licitacao in listaDeLicitacoesNaAPI:
@@ -83,7 +83,7 @@ def validarArquivosSIM(arquivos):
                     break
                 
             if licitacaoNoSIM == False and licitacaoNoArquivoLI == False:
-                logContent.append("Licitacao " + ctCO[20] + " na linha " + str(x) +  " do arquivo CO sem empenho")
+                logContent.append("Licitacao no arquivo CO na linha " + str(x) +  " não existe no arquivo LI, NE e APITCE: " + ctCO[20])
             
             else:
                 break
@@ -132,7 +132,7 @@ def validarArquivosSIM(arquivos):
                 pass
                     
             elif contratoNoSIM == False and contratoNoArquivoCO == False:
-                logContent.append("Contrato " + dadosCO[24].replace('"',"") + " na linha " + str(x) + " invalido no arquivo CO.")
+                logContent.append("Contrato faltando no arquivo CO, na linha " + str(x) + " do arquivo NE: " + dadosCO[24])
             
             elif contratoNoSIM == False and contratoNoArquivoCO and temEmpenho == False:
                 logContent.append("sem empenho")
@@ -169,11 +169,11 @@ def varClear():
 def checarSeTemEmpenho():
     for contratoCO in dataCO:
         if not(str(contratoCO[3]) in str(dataNE)):
-            logContent.append("Contrato " + contratoCO[3] + " sem empenho.")
+            logContent.append("Contrato " + contratoCO[3] + " sem empenho no arquivo NE.")
         
     for dadosLI in dataLI:
         if not(str(dadosLI[3]) in str(dataNE)):
-            logContent.append("Licitacao " + dadosLI[3] + " sem empenho.")
+            logContent.append("Licitacao " + dadosLI[3] + " sem empenho no arquivo NE.")
             
 def lerArquivosDoSIM(arquivos):
     global municipio
